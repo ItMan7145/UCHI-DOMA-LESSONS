@@ -1,0 +1,46 @@
+{
+  "coord": {
+    "lon": 37.6191,
+    "lat": 55.7592
+  },
+  "weather": [
+    {
+      "id": 804,
+      "main": "Clouds",
+      "description": "пасмурно",
+      "icon": "04n"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": -4.14,
+    "feels_like": -9.2,
+    "temp_min": -4.74,
+    "temp_max": -2.88,
+    "pressure": 1022,
+    "humidity": 92,
+    "sea_level": 1022,
+    "grnd_level": 1003
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 3.79,
+    "deg": 302,
+    "gust": 9.67
+  },
+  "clouds": {
+    "all": 100
+  },
+  "dt": 1677517695,
+  "sys": {
+    "type": 2,
+    "id": 47754,
+    "country": "RU",
+    "sunrise": 1677472028,
+    "sunset": 1677509874
+  },
+  "timezone": 10800,
+  "id": 524925,
+  "name": "Московская область",
+  "cod": 200
+}
