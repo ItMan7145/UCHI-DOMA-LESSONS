@@ -9,15 +9,15 @@
     {% for item in news %}
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title">{{ item.title }}</h5>
-                <p class="card-text">{{ item.text|truncate(80) }}</p>
+                <h5 class="card-title">{{ item[1] }}</h5>
+                <p class="card-text">{{ item[2]|truncate(80) }}</p>
                 <div class="row">
                     <div class="col">
-                        <a href="{{ url_for('news_detail', news_id=item.id) }}"
+                        <a href="{{ url_for('news_detail', news_id=item[0]) }}"
                            class="btn btn-primary">Читать далее</a>
                     </div>
                     <div class="col">
-                        <p class="text-right text-secondary">Дата: {{ item.create_date }}</p>
+                        <p class="text-right text-secondary">Дата: {{ item[3] }}</p>
                     </div>
                 </div>
             </div>

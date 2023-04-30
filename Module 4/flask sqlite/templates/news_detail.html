@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %} {{ news[1] }} {% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Солофьев новости</h1> <br>
+    <h3>{{ news[1] }}</h3>
+    <hr>
+    <p style="font-size: 20px">{{ news[2] }}</p>
+    <hr>
+    <p class="text-secondary">Дата создания статьи: {{ news[3] }}</p>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+{% endblock %}

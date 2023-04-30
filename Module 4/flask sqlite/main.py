@@ -34,7 +34,6 @@ class CategoriesForm(FlaskForm):
 
 @app.route('/')
 def index():
-    # news_list = News.query.all()
     sql.execute('SELECT * FROM news')
     news_list1 = sql.fetchall()
     # news_list2 = [{
@@ -52,7 +51,6 @@ def index():
 
 @app.route('/news_detail/<int:news_id>')
 def news_detail(news_id):
-    # news = News.query.get(news_id)
     sql.execute(f'SELECT * FROM news WHERE id={news_id}')
     news = sql.fetchone()
     return render_template('news_detail.html', news=news)
@@ -71,9 +69,9 @@ def create_news():
         text = str(form.text.data)
         try:
             sql.execute('INSERT INTO news(title, text, create_date) VALUES (?, ?, ?)',
-                        (title, text, 'str(datetime.utcnow))'))
+                        (title, text, str(datetime.utcnow().strftime('%d.%m.%Y %H:%M'))))
             db.commit()
-            sql.close()
+
         except sqlite3.Error as error:
             print('[ERROR]', error)
         return redirect(url_for('index'))
