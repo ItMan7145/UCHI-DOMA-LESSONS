@@ -22,7 +22,7 @@ def cmd_start_help(message):
 
 @bot.message_handler(content_types=['text'])
 def cmd_eho(message):
-    bot.reply_to(message, message.text)
+    bot.reply_to(message, message.data)
 
 
 if __name__ == '__main__':
