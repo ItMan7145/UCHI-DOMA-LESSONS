@@ -19,7 +19,7 @@ class CategoriesForm(FlaskForm):
     submit = SubmitField('Придумать категорию лжи')
 
 
-class SignInForm(FlaskForm):
+class LoginForm(FlaskForm):
     username = StringField('Имя пользователя', validators=[
         DataRequired(message='Да ты йёнутый! Иди лечись пока не поздно! Заполни поле, тебе же сказали!'),
         length(max=255, min=3, message='Введи имя пользователя длиной от 3 до 255 символов!')])
@@ -30,7 +30,7 @@ class SignInForm(FlaskForm):
     submit = SubmitField('Вызвать ОМОН')
 
 
-class SignUpForm(FlaskForm):
+class RegisterForm(FlaskForm):
     username = StringField('Имя пользователя', validators=[
         DataRequired(message='Да ты йёнутый! Иди лечись пока не поздно! Заполни поле, тебе же сказали!'),
         length(max=255, min=3, message='Введи имя пользователя длиной от 3 до 255 символов!')])
