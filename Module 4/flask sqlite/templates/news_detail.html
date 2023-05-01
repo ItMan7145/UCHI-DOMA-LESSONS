@@ -8,7 +8,14 @@
     <p style="font-size: 20px">{{ news[2] }}</p>
     <hr>
     <p class="text-secondary">Дата создания статьи: {{ news[3] }}</p>
+    {#    <p class="btn btn-danger">Удалить статью</p>#}
+    {#    <form method="post" novalidate>#}
+    {#        {{ form.submit(class="btn btn-danger") }}#}
+    {#    </form>#}
 
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <a href="/news_detail/{{ news[0] }}/delete" class="btn btn-danger"> Стереть грехи </a>
+    <a href="/news_detail/{{ news[0] }}/edit" class="btn btn-success"> Редактировать </a>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 {% endblock %}

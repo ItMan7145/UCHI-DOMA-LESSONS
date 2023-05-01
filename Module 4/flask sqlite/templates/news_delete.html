@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %} Стирание грехов {% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Солофьев новости</h1> <br>
+    <hr>
+    <h3> Вы действительно хотите удалить? </h3>
+
+    <div class="col-6">
+        <a href="/news_detail/{{ news_id }}/delete/confirm" class="btn btn-lg btn-danger"> Стереть грехи </a>
+    </div>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+{% endblock %}
