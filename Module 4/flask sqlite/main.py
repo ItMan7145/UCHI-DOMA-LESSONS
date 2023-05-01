@@ -2,9 +2,8 @@ import sqlite3
 from datetime import datetime
 
 from flask import Flask, render_template, redirect, url_for
-from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField, EmailField, PasswordField
-from wtforms.validators import DataRequired, length
+
+from forms import NewsForm, CategoriesForm, SignInForm
 
 try:
     db = sqlite3.connect('flask-site-db.db', check_same_thread=False)
@@ -14,45 +13,6 @@ except sqlite3.Error as error:
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '1234'
-
-
-class NewsForm(FlaskForm):
-    title = StringField('Название', validators=[
-        DataRequired(message='Да ты йёнутый! Иди лечись пока не поздно! Заполни поле, тебе же сказали!'),
-        length(max=255, min=3, message='Введи заголовок длиной от 3 до 255 символов!')])
-    text = TextAreaField(
-        'Текст', validators=[DataRequired(message='Не суди по себе! Поле не должно быть пустым как твоя голова!')])
-    submit = SubmitField('Вызвать ОМОН')
-
-
-class CategoriesForm(FlaskForm):
-    title = StringField('Название катерогии', validators=[
-        DataRequired(message='Да ты йёнутый! Иди лечись пока не поздно! Заполни поле, тебе же сказали!'),
-        length(max=255, min=3, message='Введи заголовок длиной от 3 до 255 символов!')])
-    submit = SubmitField('Придумать категорию лжи')
-
-
-class SignInForm(FlaskForm):
-    username = StringField('Имя пользователя', validators=[
-        DataRequired(message='Да ты йёнутый! Иди лечись пока не поздно! Заполни поле, тебе же сказали!'),
-        length(max=255, min=3, message='Введи имя пользователя длиной от 3 до 255 символов!')])
-    password = PasswordField('Пароль', validators=[
-        DataRequired(message='Да ты йёнутый! Иди лечись пока не поздно! Заполни поле, тебе же сказали!'),
-        length(max=255, min=3, message='Введи пароль длиной от 3 до 255 символов!')
-    ])
-    submit = SubmitField('Вызвать ОМОН')
-
-
-class SignUpForm(FlaskForm):
-    username = StringField('Имя пользователя', validators=[
-        DataRequired(message='Да ты йёнутый! Иди лечись пока не поздно! Заполни поле, тебе же сказали!'),
-        length(max=255, min=3, message='Введи имя пользователя длиной от 3 до 255 символов!')])
-    email = EmailField('Почта')
-    password = PasswordField('Придумайте пароль', validators=[
-        DataRequired(message='Да ты йёнутый! Иди лечись пока не поздно! Заполни поле, тебе же сказали!'),
-        length(max=255, min=3, message='Введи пароль длиной от 3 до 255 символов!')
-    ])
-    submit = SubmitField('Вызвать ОМОН')
 
 
 @app.route('/')
@@ -119,7 +79,8 @@ def news_edit(news_id):
         text = str(form.text.data)
         create_date = str(datetime.utcnow().strftime('%d.%m.%Y %H:%M'))
         try:
-            sql.execute(f'UPDATE news SET title={title}, text={text}, create_date={create_date} WHERE id={news_id}')
+            sql.execute(f'UPDATE news SET title="{title}", text="{text}", create_date="{create_date}" '
+                        f'WHERE id={news_id}')
             db.commit()
         except sqlite3.Error as error:
             print('[ERROR: NEWS EDIT]', error)
@@ -133,14 +94,18 @@ def create_news():
     if form.validate_on_submit():
         title = str(form.title.data)
         text = str(form.text.data)
+        create_date = str(datetime.utcnow().strftime('%d.%m.%Y %H:%M'))
         try:
-            sql.execute('INSERT INTO news(title, text, create_date) VALUES (?, ?, ?)',
-                        (title, text, str(datetime.utcnow().strftime('%d.%m.%Y %H:%M'))))
-            db.commit()
-
+            sql.execute(f'SELECT * FROM news WHERE text="{text}"')
+            if sql.fetchone() is None:
+                sql.execute('INSERT INTO news(title, text, create_date) VALUES (?, ?, ?)',
+                            (title, text, create_date))
+                db.commit()
+                return redirect(url_for('index'))
+            else:
+                return 'Ошибка. Такая новость уже есть'
         except sqlite3.Error as error:
             print('[ERROR: CREATE NEWS]', error)
-        return redirect(url_for('index'))
     return render_template('create_news.html', form=form)
 
 
@@ -149,8 +114,16 @@ def create_category():
     form = CategoriesForm()
     if form.validate_on_submit():
         title = form.title.data
-
-        return redirect(url_for('index'))
+        try:
+            sql.execute(f'SELECT * FROM categories WHERE category="{title}"')
+            if sql.fetchone() is None:
+                sql.execute('INSERT INTO categories (category) VALUES (?)', title)
+                db.commit()
+            else:
+                return 'Такая категория уже есть'
+            return redirect(url_for('index'))
+        except sqlite3.Error as error:
+            print('[ERROR: CREATE CATEGORY]', error)
     return render_template('create_category.html', form=form)
 
 
@@ -162,19 +135,25 @@ def sign():
         password = form.password.data
         reg_date = str(datetime.utcnow().strftime('%d.%m.%Y %H:%M'))
         try:
-            sql.execute(f'SELECT * FROM users WHERE username={username}')
-            if sql.fetchone():
-                print('Вход в аккаунт')
-            else:
+            sql.execute(f'SELECT * FROM users WHERE username="{username}"')
+            if sql.fetchone() is None:
                 sql.execute('INSERT INTO users(username, password, reg_date) VALUES (?, ?, ?)',
                             (username, password, reg_date))
                 db.commit()
+                return redirect(url_for('index'))
+            else:
+                print('Вход в аккаунт')
                 return redirect(url_for('index'))
         except sqlite3.Error as error:
             print('[ERROR: SIGN]', error)
     return render_template('sign.html', form=form)
 
 
+@app.route('/profile/<int:user_id>')
+def profile(user_id):
+    print(user_id)
+    return render_template('profile.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
-    # pass
