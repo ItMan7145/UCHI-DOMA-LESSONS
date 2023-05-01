@@ -1,6 +1,7 @@
 from datetime import datetime
-from flask_login import login_user, login_required, logout_user, LoginManager
+
 from flask import Flask
+from flask_login import LoginManager, UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -14,7 +15,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flask-site-db.sqlite3'
 # images_folder = os.path.join('static', 'images')
 # , static_url_path='/static'
 # app.config['UPLOAD_FOLDER'] = images_folder
-
 
 db = SQLAlchemy(app)
 manager = LoginManager(app)
@@ -31,15 +31,18 @@ class News(db.Model):
     title = db.Column(db.String(255), nullable=False)
     text = db.Column(db.Text, nullable=False)
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
+
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     category = db.relationship('Category', back_populates='news')
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(329), nullable=True)
-    reg_date = db.Column(db.DateTime, default=datetime.utcnow().strftime('%d.%m.%Y %H:%M'))
+    email = db.Column(db.String(329), nullable=True, default=None)
+    password = db.Column(db.String(255), nullable=False)
+    # datetime.utcnow().strftime('%d.%m.%Y %H:%M')
+    reg_date = db.Column(db.DateTime, default=datetime.utcnow)
     admin = db.Column(db.Boolean, nullable=False, default=False)
 
 
