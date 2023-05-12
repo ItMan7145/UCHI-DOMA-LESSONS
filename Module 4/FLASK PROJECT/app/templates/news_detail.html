@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %} {{ news.title }} {% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Солофьев новости</h1> <br>
+    <h3>{{ news.title }}</h3>
+    <hr>
+    <p style="font-size: 20px">{{ news.text }}</p>
+    <hr>
+    <p class="text-secondary">Дата создания статьи: {{ news.create_date }}</p>
+
+    <a href="/news/{{ news.id }}/delete" class="btn btn-danger"> Стереть грехи </a>
+    <a href="/news/edit/{{ news.id }}" class="btn btn-success"> Редактировать </a>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+{% endblock %}
