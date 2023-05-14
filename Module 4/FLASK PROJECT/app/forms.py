@@ -16,7 +16,7 @@ class NewsForm(FlaskForm):
         length(max=255, min=3, message='Введи заголовок длиной от 3 до 255 символов!')])
     text = TextAreaField(
         'Текст', validators=[DataRequired(message='Не суди по себе! Поле не должно быть пустым как твоя голова!')])
-    category = SelectField('Катерогия лжи', choices=get_categories, validators=[
+    category = SelectField('Категория лжи', choices=get_categories, validators=[
         Optional()
     ])
     submit = SubmitField('Вызвать ОМОН')

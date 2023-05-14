@@ -10,7 +10,8 @@ from .models import *
 @app.route('/')
 def index():
     news_list = News.query.all()
-    return render_template('index.html', news=news_list)
+    categories = Category.query.all()
+    return render_template('index.html', news=news_list, categories=categories)
 
 
 @app.route('/about')
@@ -22,21 +23,36 @@ def about():
 @login_required
 def news_detail(news_id):
     news = News.query.get(news_id)
-    return render_template('news_detail.html', news=news)
+    categories = Category.query.all()
+    return render_template('news_detail.html', news=news, categories=categories)
 
 
 @app.route('/create_news', methods=['POST', 'GET'])
 @login_required
 def create_news():
     form = NewsForm()
+    categories = Category.query.all()
     if form.validate_on_submit():
         news = News()
         news.title = form.title.data
         news.text = form.text.data
+        news.category_id = form.category.data
         db.session.add(news)
         db.session.commit()
         return redirect(url_for('index'))
-    return render_template('create_news.html', form=form)
+    return render_template('create_news.html', form=form, categories=categories)
+
+
+@app.route('/category/<int:id>')
+def news_in_category(id):
+    category = Category.query.get(id)
+    news = category.news
+    category_name = category.title
+    categories = Category.query.all()
+    return render_template('category.html',
+                           news=news,
+                           category_name=category_name,
+                           categories=categories)
 
 
 @app.route('/news/edit/<int:news_id>', methods=['GET', 'POST'])
@@ -52,6 +68,7 @@ def news_edit(news_id):
         # db.session.commit()
         return redirect(url_for('index'))
     return render_template('create_news.html', form=form)
+    # return redirect(url_for('create_news'))
 
 
 @app.route('/news/<int:news_id>/delete')

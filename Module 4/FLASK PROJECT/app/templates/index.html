@@ -16,10 +16,20 @@
                         <a href="{{ url_for('news_detail', news_id=item.id) }}"
                            class="btn btn-primary">Читать далее</a>
                     </div>
-                    <div class="col">
-                        <p class="text-right text-secondary">Дата: {{ item.create_date }}</p>
-                    </div>
+                    {#                    <div class="col">#}
+                    {#                        <p class="text-right text-secondary">Дата: {{ item.create_date }}</p>#}
+                    {#                    </div>#}
                 </div>
+            </div>
+            <div class="card-footer">
+                {% if item.create_date %}
+                    <span class="card-link">Дата: {{ item.create_date.strftime('%d.%m.%Y') }}</span>
+                {% endif %}
+                {% if item.category %}
+                    <span class="card-link">Категория:
+                        <a href="{{ url_for('news_in_category', id=item.category.id) }}">{{ item.category.title }}</a>
+                    </span>
+                {% endif %}
             </div>
         </div>
     {% endfor %}
